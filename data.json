@@ -1,0 +1,10 @@
+[
+  { "type": "phrase", "title": "How much is this?", "lang": "en", "tags": ["shopping"] },
+  { "type": "phrase", "title": "Where is the bathroom?", "lang": "en", "tags": ["basic"] },
+  { "type": "activity", "title": "Surfing", "city": "Taghazout", "tags": ["beach","sport"] },
+  { "type": "activity", "title": "Camel Rides", "city": "Merzouga", "tags": ["desert","tour"] },
+  { "type": "activity", "title": "Traditional Hammam", "city": "Marrakesh", "tags": ["spa","culture"] },
+  { "type": "emergency", "title": "Police", "number": "19", "city": "Any" },
+  { "type": "emergency", "title": "Ambulance", "number": "150", "city": "Any" },
+  { "type": "stay", "title": "Traditional Riad near medina", "city": "Fes", "budget": "Medium", "tags": ["riad","traditional"] }
+]
