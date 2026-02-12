@@ -191,9 +191,6 @@
                 </div>
             </section>
 
-            <!-- ACCOMMODATION + SAFETY + EXPERIENCES SKIPPED FOR BREVITY -->
-            <!-- (They are unchanged from your version) -->
-
         </main>
 
         <footer>
@@ -230,13 +227,23 @@
         });
     </script>
 
-    <!-- SEARCH ENGINE SCRIPT (Fuse.js) -->
+    <!-- NEW SEARCH ENGINE SCRIPT -->
     <script>
         fetch("data.json")
             .then(r => r.json())
             .then(data => {
+
+                // Fuse.js configuration for YOUR data
                 const fuse = new Fuse(data, {
-                    keys: ["title", "location", "description"],
+                    keys: [
+                        "title",
+                        "type",
+                        "city",
+                        "tags",
+                        "budget",
+                        "number",
+                        "lang"
+                    ],
                     threshold: 0.3
                 });
 
@@ -250,16 +257,21 @@
                     resultsDiv.innerHTML = "";
 
                     results.forEach(result => {
-                        const item = document.createElement("div");
-                        item.innerHTML = `
-                            <h3>${result.item.title}</h3>
-                            <p>${result.item.location}</p>
-                            <p>${result.item.description}</p>
-                            <hr>
+                        const item = result.item;
+
+                        resultsDiv.innerHTML += `
+                            <div style="padding:10px;border-bottom:1px solid #eee;">
+                                <h3>${item.title}</h3>
+                                <p><strong>Type:</strong> ${item.type || "N/A"}</p>
+                                ${item.city ? `<p><strong>City:</strong> ${item.city}</p>` : ""}
+                                ${item.budget ? `<p><strong>Budget:</strong> ${item.budget}</p>` : ""}
+                                ${item.number ? `<p><strong>Emergency Number:</strong> ${item.number}</p>` : ""}
+                                ${item.tags ? `<p><strong>Tags:</strong> ${item.tags.join(", ")}</p>` : ""}
+                            </div>
                         `;
-                        resultsDiv.appendChild(item);
                     });
                 });
+
             });
     </script>
 
