@@ -211,6 +211,11 @@
         </nav>
         
         <main class="main-content">
+            <section class="feature-card">
+  <h2 class="feature-title"><span class="feature-icon">🔎</span> Search</h2>
+  <input id="search-input" placeholder="Search activities, phrases, stays..." style="padding:0.8rem;width:100%;margin:0.5rem 0;border:1px solid #ddd;border-radius:6px;">
+  <div id="search-results"></div>
+</section>
             <!-- Translator Feature -->
             <section class="feature-card">
                 <h2 class="feature-title"><span class="feature-icon">🌐</span> Built-in Translator</h2>
@@ -387,5 +392,61 @@
             });
         });
     </script>
+    https://cdn.jsdelivr.net/npm/fuse.js@7.0.0</script>
+    <script>
+  // ===== MARHABA SEARCH (Fuse.js) =====
+
+  // 1) Load dataset from data.json
+  async function loadSearchData() {
+    try {
+      const res = await fetch('data.json', { cache: 'no-store' });
+      if (!res.ok) throw new Error('Failed to load data.json');
+      return await res.json();
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+  }
+
+  // 2) Initialize Fuse when data is ready
+  let fuse = null;
+  let searchData = [];
+
+  loadSearchData().then(items => {
+    searchData = items;
+    fuse = new Fuse(items, {
+      keys: ['title', 'city', 'tags', 'lang', 'type'],
+      threshold: 0.35,      // lower = stricter, higher = fuzzier
+      ignoreLocation: true
+    });
+  });
+
+  // 3) Hook up the input
+  const inputEl = document.getElementById('search-input');
+  const resultsEl = document.getElementById('search-results');
+
+  function renderItem(item) {
+    const badge = `<span style="background:#eee;padding:2px 6px;border-radius:4px;font-size:12px;margin-left:6px">${item.type}</span>`;
+    const sub = [item.city, item.lang, (item.tags || []).join(', ')].filter(Boolean).join(' • ');
+    return `
+      <div style="padding:10px;border:1px solid #f0f0f0;border-radius:8px;margin:8px 0;">
+        <div style="font-weight:600">${item.title} ${badge}</div>
+        ${sub ? `<div style="color:#666;font-size:13px;margin-top:4px;">${sub}</div>` : ''}
+        ${item.number ? `<div style="margin-top:4px;"><strong>Number:</strong> ${item.number}</div>` : ''}
+      </div>
+    `;
+  }
+
+  inputEl?.addEventListener('input', () => {
+    const q = inputEl.value.trim();
+    if (!q || !fuse) {
+      resultsEl.innerHTML = '';
+      return;
+    }
+    const results = fuse.search(q).slice(0, 20); // show top 20
+    resultsEl.innerHTML = results.map(r => renderItem(r.item)).join('');
+  });
+</script>
 </body>
+
 </html>
